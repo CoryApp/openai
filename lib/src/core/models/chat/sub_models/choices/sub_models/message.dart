@@ -19,6 +19,8 @@ final class OpenAIChatCompletionChoiceMessageModel {
   /// The function that the model is requesting to call.
   final List<OpenAIResponseToolCall>? toolCalls;
 
+  final String? message;
+
   /// The message participent name.
   final String? name;
 
@@ -37,6 +39,7 @@ final class OpenAIChatCompletionChoiceMessageModel {
   const OpenAIChatCompletionChoiceMessageModel({
     required this.role,
     required this.content,
+    this.message,
     this.toolCalls,
     this.name,
   });
@@ -49,6 +52,7 @@ final class OpenAIChatCompletionChoiceMessageModel {
       name: json['name'],
       role: OpenAIChatMessageRole.values
           .firstWhere((role) => role.name == json['role']),
+      message: json['message'] != null ? json['message'] : null,
       content: json['content'] != null
           ? OpenAIMessageDynamicContentFromFieldAdapter.dynamicContentFromField(
               json['content'],
@@ -66,7 +70,9 @@ final class OpenAIChatCompletionChoiceMessageModel {
   Map<String, dynamic> toMap() {
     return {
       "role": role.name,
-      "content": content?.map((contentItem) => contentItem.toMap()).toList(),
+      "content": message != null
+          ? message
+          : content?.map((contentItem) => contentItem.toMap()).toList(),
       if (toolCalls != null && role == OpenAIChatMessageRole.assistant)
         "tool_calls": toolCalls!.map((toolCall) => toolCall.toMap()).toList(),
       if (name != null) "name": name,
