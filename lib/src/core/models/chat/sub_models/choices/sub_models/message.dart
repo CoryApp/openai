@@ -38,7 +38,7 @@ final class OpenAIChatCompletionChoiceMessageModel {
   /// {@macro openai_chat_completion_choice_message_model}
   const OpenAIChatCompletionChoiceMessageModel({
     required this.role,
-    required this.content,
+    this.content,
     this.message,
     this.toolCalls,
     this.name,
@@ -83,7 +83,7 @@ final class OpenAIChatCompletionChoiceMessageModel {
   String toString() {
     String str = 'OpenAIChatCompletionChoiceMessageModel('
         'role: $role, '
-        'content: $content, ';
+        'content: ${message!= null ? message : content}, ';
 
     if (toolCalls != null) {
       str += 'toolCalls: $toolCalls, ';
