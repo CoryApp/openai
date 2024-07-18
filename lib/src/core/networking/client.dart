@@ -290,13 +290,14 @@ abstract class OpenAINetworkingClient {
     required String to,
     required T Function(Map<String, dynamic>) onSuccess,
     Map<String, dynamic>? body,
+    Map<String, String>? header,
     http.Client? client,
   }) async {
     OpenAILogger.logStartRequest(to);
 
     final uri = Uri.parse(to);
 
-    final headers = HeadersBuilder.build();
+    final headers = header ?? HeadersBuilder.build();
 
     final handledBody = body != null ? jsonEncode(body) : null;
 
@@ -342,11 +343,12 @@ abstract class OpenAINetworkingClient {
     required T Function(Map<String, dynamic>) onSuccess,
     required Map<String, dynamic> body,
     http.Client? client,
+    Map<String, String>? header,
   }) async* {
     try {
       final clientForUse = client ?? _streamingHttpClient();
       final uri = Uri.parse(to);
-      final headers = HeadersBuilder.build();
+      final headers = header ?? HeadersBuilder.build();
       final httpMethod = OpenAIStrings.postMethod;
       final request = http.Request(httpMethod, uri);
       request.headers.addAll(headers);

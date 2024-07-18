@@ -80,6 +80,7 @@ interface class OpenAIChat implements OpenAIChatBase {
     double? frequencyPenalty,
     Map<String, dynamic>? logitBias,
     String? user,
+    Map<String, String>? headers,
     Map<String, String>? responseFormat,
     int? seed,
     bool? logprobs,
@@ -112,6 +113,7 @@ interface class OpenAIChat implements OpenAIChatBase {
         return OpenAIChatCompletionModel.fromMap(response);
       },
       client: client,
+      header: headers,
     );
   }
 
@@ -177,6 +179,7 @@ interface class OpenAIChat implements OpenAIChatBase {
     double? frequencyPenalty,
     Map<String, dynamic>? logitBias,
     Map<String, String>? responseFormat,
+    Map<String, String>? headers,
     int? seed,
     String? user,
     http.Client? client,
@@ -206,6 +209,7 @@ interface class OpenAIChat implements OpenAIChatBase {
         return OpenAIStreamChatCompletionModel.fromMap(response);
       },
       client: client,
+      header: headers,
     );
   }
 
