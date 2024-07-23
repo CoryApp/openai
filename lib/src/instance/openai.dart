@@ -23,24 +23,14 @@ import 'model/model.dart';
 @immutable
 final class OpenAI extends OpenAIClientBase {
   /// The singleton instance of [OpenAI].
-  static final OpenAI _instance = OpenAI._();
+  final String baseUrl;
+  // static final OpenAI _instance = OpenAI._();
 
   /// The API key used to authenticate the requests.
   static String? _internalApiKey;
 
   /// The singleton instance of [OpenAI], make sure to set your OpenAI API key via the [OpenAI.apiKey] setter before accessing the [OpenAI.instance], otherwise it will throw an [Exception].
   /// A [MissingApiKeyException] will be thrown, if the API key is not set.
-  static OpenAI get instance {
-    if (_internalApiKey == null) {
-      throw MissingApiKeyException("""
-      You must set the api key before accessing the instance of this class.
-      Example:
-      OpenAI.apiKey = "Your API Key";
-      """);
-    }
-
-    return _instance;
-  }
 
   /// {@macro openai_config_requests_timeOut}
   static Duration get requestsTimeOut => OpenAIConfig.requestsTimeOut;
@@ -74,7 +64,7 @@ final class OpenAI extends OpenAIClientBase {
   OpenAIModeration get moderation => OpenAIModeration();
 
   /// The [OpenAIChat] instance, used to access the chat endpoints.
-  OpenAIChat get chat => OpenAIChat();
+  OpenAIChat get chat => OpenAIChat(baseUrl: this.baseUrl);
 
   /// The [OpenAIAudio] instance, used to access the audio endpoints.
   OpenAIAudio get audio => OpenAIAudio();
@@ -84,7 +74,7 @@ final class OpenAI extends OpenAIClientBase {
 
   /// The base API url, by default it is set to the OpenAI API url.
   /// You can change it by calling the [OpenAI.baseUrl] setter.
-  static String get baseUrl => OpenAIConfig.baseUrl;
+  // static String get baseUrl => OpenAIConfig.baseUrl;
 
   /// {@macro openai_config_requests_timeOut}
   static set requestsTimeOut(Duration requestsTimeOut) {
@@ -112,9 +102,9 @@ final class OpenAI extends OpenAIClientBase {
   }
 
   /// This is used to set the base url of the OpenAI API, by default it is set to [OpenAIConfig.baseUrl].
-  static set baseUrl(String baseUrl) {
-    OpenAIConfig.baseUrl = baseUrl;
-  }
+  // static set baseUrl(String baseUrl) {
+  //   OpenAIConfig.baseUrl = baseUrl;
+  // }
 
   /// If you have multiple organizations, you can set it's id with this.
   /// once this is set, it will be used in all the requests to the OpenAI API.
@@ -177,7 +167,20 @@ final class OpenAI extends OpenAIClientBase {
   // }
 
   /// The constructor of [OpenAI]. It is private, so you can only access the instance by calling the [OpenAI.instance] getter.
-  OpenAI._();
+  OpenAI._(this.baseUrl);
+
+  static OpenAI instance({String? baseUrl}) {
+    if (_internalApiKey == null) {
+      throw MissingApiKeyException("""
+      You must set the api key before accessing the instance of this class.
+      Example:
+      OpenAI.apiKey = "Your API Key";
+      """);
+    }
+    final _baseUrl = baseUrl ?? OpenAIConfig.baseUrl;
+
+    return OpenAI._(_baseUrl);
+  }
 
   /// Adds the given [headers] to all future requests made using the package.
   ///

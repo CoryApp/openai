@@ -13,11 +13,13 @@ import 'package:http/http.dart' as http;
 /// This class is responsible for handling all chat requests, such as creating a chat completion for the message(s).
 /// {@endtemplate}
 interface class OpenAIChat implements OpenAIChatBase {
+  String? baseUrl;
   @override
   String get endpoint => OpenAIStrings.endpoints.chat;
 
   /// {@macro openai_chat}
-  OpenAIChat() {
+  OpenAIChat({String? baseUrl}) {
+    this.baseUrl = baseUrl;
     OpenAILogger.logEndpoint(endpoint);
   }
 
@@ -88,7 +90,7 @@ interface class OpenAIChat implements OpenAIChatBase {
     http.Client? client,
   }) async {
     return await OpenAINetworkingClient.post(
-      to: BaseApiUrlBuilder.build(endpoint),
+      to: BaseApiUrlBuilder.build(endpoint, baseUrl),
       body: {
         "model": model,
         "messages": messages.map((message) => message.toMap()).toList(),
@@ -168,7 +170,6 @@ interface class OpenAIChat implements OpenAIChatBase {
   Stream<OpenAIStreamChatCompletionModel> createStream({
     required String model,
     required List<OpenAIChatCompletionChoiceMessageModel> messages,
-    String? baseUrl,
     List<OpenAIToolModel>? tools,
     toolChoice,
     double? temperature,
@@ -234,7 +235,7 @@ interface class OpenAIChat implements OpenAIChatBase {
     int? seed,
   }) {
     return OpenAINetworkingClient.postStream<OpenAIStreamChatCompletionModel>(
-      to: BaseApiUrlBuilder.build(endpoint),
+      to: BaseApiUrlBuilder.build(endpoint, baseUrl),
       body: {
         "model": model,
         "stream": true,
