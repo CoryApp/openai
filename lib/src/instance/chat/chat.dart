@@ -168,6 +168,7 @@ interface class OpenAIChat implements OpenAIChatBase {
   Stream<OpenAIStreamChatCompletionModel> createStream({
     required String model,
     required List<OpenAIChatCompletionChoiceMessageModel> messages,
+    String? baseUrl,
     List<OpenAIToolModel>? tools,
     toolChoice,
     double? temperature,
@@ -185,7 +186,7 @@ interface class OpenAIChat implements OpenAIChatBase {
     http.Client? client,
   }) {
     return OpenAINetworkingClient.postStream<OpenAIStreamChatCompletionModel>(
-      to: BaseApiUrlBuilder.build(endpoint),
+      to: BaseApiUrlBuilder.build(endpoint, baseUrl),
       body: {
         "model": model,
         "stream": true,

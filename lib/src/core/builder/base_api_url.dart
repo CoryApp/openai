@@ -13,8 +13,13 @@ abstract class BaseApiUrlBuilder {
   /// if an [id] is pr =ovided, it will be added to the url as well.
   /// if a [query] is provided, it will be added to the url as well.
   @internal
-  static String build(String endpoint, [String? id, String? query]) {
-    final baseUrl = OpenAIConfig.baseUrl;
+  static String build(
+    String endpoint, [
+    String? url,
+    String? id,
+    String? query,
+  ]) {
+    final baseUrl = url ?? OpenAIConfig.baseUrl;
     final usedEndpoint = _handleEndpointsStarting(endpoint);
 
     String apiLink = "$baseUrl";
